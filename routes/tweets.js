@@ -2,6 +2,22 @@ const express = require('express');
 const router = express.Router();
 const {Tweet} = require('../db/models')
 const asyncHandler = require('../utils/utilities')
+const {check, validationResult} = require('express-validator');
+
+
+const handleValidationErrors = (req, res, next) =>{
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()){
+    const errors = validationErrors.array().map((error) => error.msg);
+    const err = new Error('Bad Request.');
+    err.errors = errors;
+    err.status = 400;
+    err.title = "Bad Request."
+    return next(err);
+    }
+    next();
+}
 
 const tweetNotFound = (id) => {
     const err = new Error(`The tweet with the givin id of ${id} not found.`);
@@ -26,4 +42,7 @@ router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
 
 }));
 
+router.post('/tweets', asyncHandler(async (req, res, next) =>{
+
+}));
 module.exports = router;
