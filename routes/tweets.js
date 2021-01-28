@@ -33,7 +33,7 @@ router.get('/', asyncHandler( async (req, res) => {
 
 }));
 
-router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)', handleValidationErrors, asyncHandler(async (req, res, next) => {
     const tweetId = parseInt(req.params.id, 10);
     const tweet = await Tweet.findByPk(tweetId);
 
@@ -43,6 +43,10 @@ router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
 }));
 
 router.post('/tweets', asyncHandler(async (req, res, next) =>{
-
+    const { message } = req.body;
+    const newTweet = await Tweet.create({ message });
+    res.json({ newTweet });
 }));
+
+
 module.exports = router;
