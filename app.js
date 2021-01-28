@@ -14,7 +14,7 @@ app.use('/tweets', tweetsRouter);
 
 // Catch unhandled requests and forward to error handler.
 app.use((req, res, next) => {
-  const err = new Error("The requested resource couldn't be found.");
+  const err = new Error("Blah Blah The requested resource couldn't be found.");
   err.status = 404;
   next(err);
 });
