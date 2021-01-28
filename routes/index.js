@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-routes.get("/", (req, res) => {
+router.get("/", (req, res) => {
     res.json({ message: 'test root index.' });
   });
 

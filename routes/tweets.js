@@ -1,7 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const {Tweet} = require('../db/models')
+const asyncHandler = require('../utils/utilities')
 
-router.get('/', (req, res) => {
-    res.json({ message: 'test tweets index' });
-});
+
+router.get('/', asyncHandler( async (req, res) => {
+    const tweets = await Tweet.findAll()
+    res.json({tweets})
+    
+    
+}));
+
+router.get('')
+
 module.exports = router;
