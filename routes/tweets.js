@@ -4,6 +4,14 @@ const {Tweet} = require('../db/models')
 const asyncHandler = require('../utils/utilities')
 const {check, validationResult} = require('express-validator');
 
+const tweetErrors = [
+    check("message")
+        .exists({checkFalsy: true})
+        .withMessage("Please enter a tweet before submitting."),
+    check("message")
+        .isLength({max: 280})
+        .withMessage("Tweets cannot exceed 280 characters.")
+    ]
 
 const handleValidationErrors = (req, res, next) =>{
     const validationErrors = validationResult(req);
@@ -33,7 +41,7 @@ router.get('/', asyncHandler( async (req, res) => {
 
 }));
 
-router.get('/:id(\\d+)', handleValidationErrors, asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
     const tweetId = parseInt(req.params.id, 10);
     const tweet = await Tweet.findByPk(tweetId);
 
@@ -42,11 +50,22 @@ router.get('/:id(\\d+)', handleValidationErrors, asyncHandler(async (req, res, n
 
 }));
 
-router.post('/tweets', asyncHandler(async (req, res, next) =>{
+router.post('/', tweetErrors, handleValidationErrors, asyncHandler(async (req, res, next) =>{
     const { message } = req.body;
     const newTweet = await Tweet.create({ message });
     res.json({ newTweet });
 }));
+
+router.put('/:id(\\d+)',tweetErrors, handleValidationErrors, asyncHandler (async (req, res, next)=>{
+    const tweetId = partInt(req.params.id, 10);
+    if (!tweet)  next(tweetNotFound(tweetId))
+    const currentTweet = await Tweet.findByPk(tweetId);
+    currentTweet.message = req.body.message
+    await currentTweet.save();
+    res.json({currentTweet})
+} )) 
+
+// await currentTweet.update({message: req.body.message})
 
 
 module.exports = router;
